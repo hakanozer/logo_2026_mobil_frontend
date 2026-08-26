@@ -12,6 +12,8 @@ const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const sellerRoutes = require("./routes/sellerRoutes");
 
+const cookieParser = require("cookie-parser");
+
 const app = express();
 
 app.use(helmet());
@@ -23,6 +25,7 @@ app.use(
 );
 app.use(express.json());
 app.use(generalLimiter);
+app.use(cookieParser());
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok" });

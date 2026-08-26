@@ -11,6 +11,7 @@ function createToken(user) {
   });
 }
 
+
 async function register({ name, email, password, role }) {
   const normalizedEmail = email.trim().toLowerCase();
 

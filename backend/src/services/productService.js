@@ -12,7 +12,6 @@ async function createProduct(sellerId, payload) {
     category: payload.category.trim().toLowerCase(),
     sellerId,
   });
-
   return product;
 }
 
