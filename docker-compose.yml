@@ -1,0 +1,53 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: localshop-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - localshop-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: localshop-backend
+    restart: unless-stopped
+    ports:
+      - "5050:5050"
+    environment:
+      - PORT=5050
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/localshop
+      - JWT_SECRET=change_this_to_a_long_random_secret
+      - JWT_EXPIRES_IN=7d
+      - CLIENT_ORIGIN=http://localhost:5173
+    depends_on:
+      - mongo
+    networks:
+      - localshop-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: localshop-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:5050/api
+    depends_on:
+      - backend
+    networks:
+      - localshop-network
+
+networks:
+  localshop-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
